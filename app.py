@@ -74,21 +74,21 @@ if uploaded_file:
         df['Discounted Cashflow (calc)'] = df['Expected Cashflow (calc)'] * df['Discount rate.1']
         df['PVFP (calc)'] = df['Discounted Cashflow (calc)'].sum()
 
-        # --- Display calculation logic ---
-        st.markdown("""
-        ### 🧮 Python Recalculation Logic
-        ```python
-        df['Survival rate (calc)'] = 1.0
-        for i in range(1, len(df)):
-            df.loc[i, 'Survival rate (calc)'] = df.loc[i-1, 'Survival rate (calc)'] * (1 - df.loc[i, 'Death rate'])
+        # --- Compare calculations and display side-by-side comparison ---
+        comparison_data = pd.DataFrame({
+            "Time": df['Time'],
+            "Survival rate (Excel)": df['Survival rate'],
+            "Survival rate (Expected)": df['Survival rate (calc)'],
+            "Expected CF (Excel)": df['Expected Cashflow'],
+            "Expected CF (Expected)": df['Expected Cashflow (calc)'],
+            "Discounted CF (Excel)": df['Discounted cashflow'],
+            "Discounted CF (Expected)": df['Discounted Cashflow (calc)'],
+        })
 
-        df['Expected Cashflow (calc)'] = df['Cashflow'] * df['Survival rate (calc)']
-        df['Discounted Cashflow (calc)'] = df['Expected Cashflow (calc)'] * df['Discount rate.1']
-        df['PVFP (calc)'] = df['Discounted Cashflow (calc)'].sum()
-        ```
-        """)
+        st.subheader("Column-by-Column Validation")
+        st.dataframe(comparison_data)
 
-        # --- Compare calculations ---
+        # --- Check differences ---
         df['Survival rate diff'] = abs(df['Survival rate'] - df['Survival rate (calc)'])
         df['Expected CF diff'] = abs(df['Expected Cashflow'] - df['Expected Cashflow (calc)'])
         df['Discounted CF diff'] = abs(df['Discounted cashflow'] - df['Discounted Cashflow (calc)'])
