@@ -94,6 +94,9 @@ if uploaded_file:
 
         if any(df['Survival rate diff'] > tol):
             errors.append("Survival rate calculation mismatch detected.")
+        if any(df['Discount factor diff'] > tol):
+            errors.append("Discount factor calculation mismatch detected.")
+
         if any(df['Expected CF diff'] > tol):
             errors.append("Expected Cashflow mismatch detected.")
         if any(df['Discounted CF diff'] > tol):
