@@ -66,9 +66,10 @@ if uploaded_file:
         errors = []
 
         # --- Recalculations ---
-df['Discount factor (calc)'] = 1.0
-for i in range(1, len(df)):
-    df.loc[i, 'Discount factor (calc)'] = df.loc[i-1, 'Discount factor (calc)'] / (1 + df.loc[i, 'Discount rate'])
+        df['Discount factor (calc)'] = 1.0
+        for i in range(1, len(df)):
+            df.loc[i, 'Discount factor (calc)'] = df.loc[i-1, 'Discount factor (calc)'] / (1 + df.loc[i, 'Discount rate'])
+
         df['Survival rate (calc)'] = 1.0
         for i in range(1, len(df)):
             df.loc[i, 'Survival rate (calc)'] = df.loc[i-1, 'Survival rate (calc)'] * (1 - df.loc[i, 'Death rate'])
