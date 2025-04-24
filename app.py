@@ -120,6 +120,3 @@ if uploaded_file:
                 'Difference': [abs(df['PVFP (calc)'].iloc[0] - pvfp_sheet)]
             })
             st.dataframe(pvfp_df)
-
-        st.subheader("Detailed Comparison Table")
-        st.dataframe(df)
