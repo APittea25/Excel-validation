@@ -43,7 +43,7 @@ if uploaded_file:
         "Discount factor": "Calculated as the previous discount factor divided by (1 + Discount rate). The discount factor is assumed to be 1 at Time = 1",
         "Expected Cashflow": "Calculated as Cashflow × Survival rate.",
         "Discounted cashflow": "Calculated as Expected Cashflow × Discount Factor.",
-        "PVFP": "Present Value of Future Profits. =SUM of discounted cashflows."
+        "PVFP": "Present Value of Future Profits. =SUM of discounted cashflows.",
     }
 
     for header, values in column_formulas.items():
