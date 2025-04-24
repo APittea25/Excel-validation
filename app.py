@@ -74,20 +74,6 @@ if uploaded_file:
         df['Discounted Cashflow (calc)'] = df['Expected Cashflow (calc)'] * df['Discount rate.1']
         df['PVFP (calc)'] = df['Discounted Cashflow (calc)'].sum()
 
-        # --- Compare calculations and display side-by-side comparison ---
-        comparison_data = pd.DataFrame({
-            "Time": df['Time'],
-            "Survival rate (Excel)": df['Survival rate'],
-            "Survival rate (Expected)": df['Survival rate (calc)'],
-            "Expected CF (Excel)": df['Expected Cashflow'],
-            "Expected CF (Expected)": df['Expected Cashflow (calc)'],
-            "Discounted CF (Excel)": df['Discounted cashflow'],
-            "Discounted CF (Expected)": df['Discounted Cashflow (calc)'],
-        })
-
-        st.subheader("Column-by-Column Validation")
-        st.dataframe(comparison_data)
-
         # --- Check differences ---
         df['Survival rate diff'] = abs(df['Survival rate'] - df['Survival rate (calc)'])
         df['Expected CF diff'] = abs(df['Expected Cashflow'] - df['Expected Cashflow (calc)'])
@@ -114,6 +100,26 @@ if uploaded_file:
             st.error("Issues found in the following areas:")
             for err in errors:
                 st.write(f"- {err}")
+
+        st.subheader("Validation Tables")
+
+        st.markdown("#### Survival Rate")
+        st.dataframe(df[['Time', 'Survival rate', 'Survival rate (calc)', 'Survival rate diff']])
+
+        st.markdown("#### Expected Cashflow")
+        st.dataframe(df[['Time', 'Expected Cashflow', 'Expected Cashflow (calc)', 'Expected CF diff']])
+
+        st.markdown("#### Discounted Cashflow")
+        st.dataframe(df[['Time', 'Discounted cashflow', 'Discounted Cashflow (calc)', 'Discounted CF diff']])
+
+        if 'PVFP' in df.columns:
+            st.markdown("#### PVFP")
+            pvfp_df = pd.DataFrame({
+                'PVFP (Excel)': [pvfp_sheet],
+                'PVFP (Calculated)': [df['PVFP (calc)'].iloc[0]],
+                'Difference': [abs(df['PVFP (calc)'].iloc[0] - pvfp_sheet)]
+            })
+            st.dataframe(pvfp_df)
 
         st.subheader("Detailed Comparison Table")
         st.dataframe(df)
