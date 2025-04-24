@@ -11,7 +11,7 @@ uploaded_file = st.file_uploader("Choose an Excel file", type=[".xlsx"])
 
 if uploaded_file:
     required_columns = {'Time', 'Cashflow', 'Death rate', 'Discount rate', 'Survival rate', 'Discount factor', 'Expected Cashflow', 'Discounted cashflow', 'PVFP'}
-with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
         tmp.write(uploaded_file.read())
         tmp_path = tmp.name
 
@@ -149,7 +149,7 @@ df['Expected Cashflow (calc)'] = df['Cashflow'] * df['Survival rate (calc)']
         st.markdown("""**Calculation Description:** Discounted Cashflow is calculated by multiplying the Expected Cashflow by the Discount factor.
 
 ```python
-df['Discounted Cashflow (calc)'] = df['Expected Cashflow (calc)'] * df['Discount rate.1']
+df['Discounted Cashflow (calc)'] = df['Expected Cashflow (calc)'] * df['Discount factor']
 ```""")
         st.dataframe(df[['Time', 'Discounted cashflow', 'Discounted Cashflow (calc)', 'Discounted CF diff']])
 
