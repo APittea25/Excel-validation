@@ -35,14 +35,15 @@ if uploaded_file:
 
     column_analysis = {}
     column_descriptions = {
-        "Time": "Represents the time period (e.g., year). Usually hardcoded.",
-        "Cashflow": "Cash amount expected or paid at each time step. Typically hardcoded.",
-        "Death rate": "Assumed probability of death in the period. Usually hardcoded.",
-        "Discount rate": "Base rate for discounting future values. Often constant or based on a curve.",
-        "Survival rate": "Calculated as the previous survival rate multiplied by (1 - death rate).",
+        "Time": "Represents the time period (e.g., year). This is an input.",
+        "Cashflow": "Cash amount expected or paid at each time step. This is an input.",
+        "Death rate": "Assumed probability of death in the period. This is an input",
+        "Discount rate": "Base rate for discounting future values. Often constant or based on a curve. This is an input",
+        "Survival rate": "Calculated as the previous survival rate multiplied by (1 - death rate). The survival rate is assumed to be 1 at Time = 1",
+        "Discount factor": "Calculated as the previous discount factor divided by (1 + Discount rate). The discount factor is assumed to be 1 at Time = 1",
         "Expected Cashflow": "Calculated as Cashflow × Survival rate.",
         "Discounted cashflow": "Calculated as Expected Cashflow × Discount Factor.",
-        "PVFP": "Present Value of Future Profits. Typically =SUM of discounted cashflows.",
+        "PVFP": "Present Value of Future Profits. =SUM of discounted cashflows.",
     }
 
     for header, values in column_formulas.items():
