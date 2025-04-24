@@ -66,6 +66,9 @@ if uploaded_file:
         errors = []
 
         # --- Recalculations ---
+df['Discount factor (calc)'] = 1.0
+for i in range(1, len(df)):
+    df.loc[i, 'Discount factor (calc)'] = df.loc[i-1, 'Discount factor (calc)'] / (1 + df.loc[i, 'Discount rate'])
         df['Survival rate (calc)'] = 1.0
         for i in range(1, len(df)):
             df.loc[i, 'Survival rate (calc)'] = df.loc[i-1, 'Survival rate (calc)'] * (1 - df.loc[i, 'Death rate'])
@@ -74,7 +77,9 @@ if uploaded_file:
         df['Discounted Cashflow (calc)'] = df['Expected Cashflow (calc)'] * df['Discount rate.1']
         df['PVFP (calc)'] = df['Discounted Cashflow (calc)'].sum()
 
-        # --- Check differences ---
+        df['Discount factor diff'] = abs(df['Discount rate.1'] - df['Discount factor (calc)'])
+
+# --- Check differences ---
         df['Survival rate diff'] = abs(df['Survival rate'] - df['Survival rate (calc)'])
         df['Expected CF diff'] = abs(df['Expected Cashflow'] - df['Expected Cashflow (calc)'])
         df['Discounted CF diff'] = abs(df['Discounted cashflow'] - df['Discounted Cashflow (calc)'])
@@ -102,6 +107,16 @@ if uploaded_file:
                 st.write(f"- {err}")
 
         st.subheader("Validation Tables")
+
+        st.markdown("#### Discount Factor")
+        st.markdown("""**Calculation Description:** The discount factor is initialized at 1.0. For each subsequent period, it is calculated as 1 / (1 + previous period's discount rate).
+
+```python
+df['Discount factor (calc)'] = 1.0
+for i in range(1, len(df)):
+    df.loc[i, 'Discount factor (calc)'] = df.loc[i-1, 'Discount factor (calc)'] / (1 + df.loc[i, 'Discount rate'])
+```""")
+        st.dataframe(df[['Time', 'Discount rate.1', 'Discount factor (calc)', 'Discount factor diff']])
 
         st.markdown("#### Survival Rate")
         st.markdown("""**Calculation Description:** Survival rate is calculated as the previous period's survival rate multiplied by (1 - death rate). The first value is set to 1.0.
