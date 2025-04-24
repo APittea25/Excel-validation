@@ -10,8 +10,8 @@ st.write("Upload your actuarial cashflow Excel file to verify calculations and r
 uploaded_file = st.file_uploader("Choose an Excel file", type=[".xlsx"])
 
 if uploaded_file:
-    required_columns = {'Time', 'Cashflow', 'Death rate', 'Discount rate', 'Survival rate', 'Discount rate.1', 'Expected Cashflow', 'Discounted cashflow', 'PVFP'}
-.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
+    required_columns = {'Time', 'Cashflow', 'Death rate', 'Discount rate', 'Survival rate', 'Discount factor', 'Expected Cashflow', 'Discounted cashflow', 'PVFP'}
+with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
         tmp.write(uploaded_file.read())
         tmp_path = tmp.name
 
@@ -80,7 +80,7 @@ if uploaded_file:
             df.loc[i, 'Survival rate (calc)'] = df.loc[i-1, 'Survival rate (calc)'] * (1 - df.loc[i, 'Death rate'])
 
         df['Expected Cashflow (calc)'] = df['Cashflow'] * df['Survival rate (calc)']
-        df['Discounted Cashflow (calc)'] = df['Expected Cashflow (calc)'] * df['Discount rate.1']
+        df['Discounted Cashflow (calc)'] = df['Expected Cashflow (calc)'] * df['Discount factor']
         df['PVFP (calc)'] = df['Discounted Cashflow (calc)'].sum()
 
         df['Discount factor diff'] = abs(df['Discount rate.1'] - df['Discount factor (calc)'])
@@ -127,7 +127,7 @@ df['Discount factor (calc)'] = 1.0
 for i in range(1, len(df)):
     df.loc[i, 'Discount factor (calc)'] = df.loc[i-1, 'Discount factor (calc)'] / (1 + df.loc[i, 'Discount rate'])
 ```""")
-        st.dataframe(df[['Time', 'Discount rate.1', 'Discount factor (calc)', 'Discount factor diff']])
+        st.dataframe(df[['Time', 'Discount factor', 'Discount factor (calc)', 'Discount factor diff']])
         st.markdown("""**Calculation Description:** Survival rate is calculated as the previous period's survival rate multiplied by (1 - death rate). The first value is set to 1.0.
 
 ```python
