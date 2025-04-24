@@ -10,11 +10,16 @@ st.write("Upload your actuarial cashflow Excel file to verify calculations and r
 uploaded_file = st.file_uploader("Choose an Excel file", type=[".xlsx"])
 
 if uploaded_file:
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
+    required_columns = {'Time', 'Cashflow', 'Death rate', 'Discount rate', 'Survival rate', 'Discount rate.1', 'Expected Cashflow', 'Discounted cashflow', 'PVFP'}
+.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
         tmp.write(uploaded_file.read())
         tmp_path = tmp.name
 
-    df = pd.read_excel(tmp_path, sheet_name=0)
+        df = pd.read_excel(tmp_path, sheet_name=0)
+    missing_columns = required_columns - set(df.columns)
+    if missing_columns:
+        st.error(f"Missing required columns in the uploaded file: {', '.join(missing_columns)}")
+        st.stop()
     st.subheader("Raw Data Preview")
     st.dataframe(df)
 
