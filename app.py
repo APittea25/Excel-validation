@@ -34,16 +34,28 @@ if uploaded_file:
             column_formulas[header].append(cell.value)
 
     column_analysis = {}
+    column_descriptions = {
+        "Time": "Represents the time period (e.g., year). Usually hardcoded.",
+        "Cashflow": "Cash amount expected or paid at each time step. Typically hardcoded.",
+        "Death rate": "Assumed probability of death in the period. Usually hardcoded.",
+        "Discount rate": "Base rate for discounting future values. Often constant or based on a curve.",
+        "Survival rate": "Calculated as the previous survival rate multiplied by (1 - death rate).",
+        "Expected Cashflow": "Calculated as Cashflow × Survival rate.",
+        "Discounted cashflow": "Calculated as Expected Cashflow × Discount Factor.",
+        "PVFP": "Present Value of Future Profits. Typically =SUM of discounted cashflows.",
+    }
+
     for header, values in column_formulas.items():
         formulas = [v for v in values if isinstance(v, str) and v.startswith('=')]
+        description = column_descriptions.get(header, "No specific description available.")
         if not formulas:
-            column_analysis[header] = "✅ Hardcoded values."
+            column_analysis[header] = f"✅ Hardcoded values. {description}"
         else:
             unique_formulas = set(formulas)
             if len(unique_formulas) == 1:
-                column_analysis[header] = f"✅ Formula-driven with consistent formula: `{formulas[0]}`"
+                column_analysis[header] = f"✅ Formula-driven with consistent formula: `{formulas[0]}`. {description}"
             else:
-                column_analysis[header] = f"⚠️ Formula-driven with inconsistencies: {len(unique_formulas)} different formulas detected."
+                column_analysis[header] = f"⚠️ Formula-driven with inconsistencies: {len(unique_formulas)} different formulas detected. {description}"
 
     with st.expander("🔍 Column-by-Column Explanation"):
         for col, explanation in column_analysis.items():
