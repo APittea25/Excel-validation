@@ -103,10 +103,42 @@ if uploaded_file:
 
         st.subheader("Validation Tables")
 
-                st.markdown("#### Survival Rate")
-        st.markdown("""**Calculation Description:** PVFP (Present Value of Future Profits) is the total of all discounted cashflows.
+        st.markdown("#### Survival Rate")
+        st.markdown("""**Calculation Description:** Survival rate is calculated as the previous period's survival rate multiplied by (1 - death rate). The first value is set to 1.0.
+
+```python
+df['Survival rate (calc)'] = 1.0
+for i in range(1, len(df)):
+    df.loc[i, 'Survival rate (calc)'] = df.loc[i-1, 'Survival rate (calc)'] * (1 - df.loc[i, 'Death rate'])
+```""")
+        st.dataframe(df[['Time', 'Survival rate', 'Survival rate (calc)', 'Survival rate diff']])
+
+        st.markdown("#### Expected Cashflow")
+        st.markdown("""**Calculation Description:** Expected Cashflow is calculated by multiplying the Cashflow by the Survival rate.
+
+```python
+df['Expected Cashflow (calc)'] = df['Cashflow'] * df['Survival rate (calc)']
+```""")
+        st.dataframe(df[['Time', 'Expected Cashflow', 'Expected Cashflow (calc)', 'Expected CF diff']])
+
+        st.markdown("#### Discounted Cashflow")
+        st.markdown("""**Calculation Description:** Discounted Cashflow is calculated by multiplying the Expected Cashflow by the Discount factor.
+
+```python
+df['Discounted Cashflow (calc)'] = df['Expected Cashflow (calc)'] * df['Discount rate.1']
+```""")
+        st.dataframe(df[['Time', 'Discounted cashflow', 'Discounted Cashflow (calc)', 'Discounted CF diff']])
+
+        if 'PVFP' in df.columns:
+            st.markdown("#### PVFP")
+            st.markdown("""**Calculation Description:** PVFP (Present Value of Future Profits) is the total of all discounted cashflows.
 
 ```python
 df['PVFP (calc)'] = df['Discounted Cashflow (calc)'].sum()
 ```""")
-        st.dataframe(pvfp_df)
+            pvfp_df = pd.DataFrame({
+                'PVFP (Excel)': [pvfp_sheet],
+                'PVFP (Calculated)': [df['PVFP (calc)'].iloc[0]],
+                'Difference': [abs(df['PVFP (calc)'].iloc[0] - pvfp_sheet)]
+            })
+            st.dataframe(pvfp_df)
