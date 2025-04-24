@@ -54,9 +54,9 @@ if uploaded_file:
         else:
             unique_formulas = set(formulas)
             if len(unique_formulas) == 1:
-                column_analysis[header] = f"✅ Formula-driven with consistent formula: `{formulas[0]}`. {description}"
+                column_analysis[header] = f"❗ Formula-driven: `{formulas[0]}`. {description}"
             else:
-                column_analysis[header] = f"⚠️ Formula-driven with inconsistencies: {len(unique_formulas)} different formulas detected. {description}"
+                column_analysis[header] = f"❗ Formula-driven (varied formulas). {description}"
 
     with st.expander("🔍 Column-by-Column Explanation"):
         for col, explanation in column_analysis.items():
