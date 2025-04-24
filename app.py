@@ -112,14 +112,7 @@ if uploaded_file:
         
 
         st.markdown("#### Survival Rate")
-        st.markdown("""**Calculation Description:** Survival rate is calculated as the previous period's survival rate multiplied by (1 - death rate). The first value is set to 1.0.
-
-```python
-df['Survival rate (calc)'] = 1.0
-for i in range(1, len(df)):
-    df.loc[i, 'Survival rate (calc)'] = df.loc[i-1, 'Survival rate (calc)'] * (1 - df.loc[i, 'Death rate'])
-```""")
-        st.dataframe(df[['Time', 'Survival rate', 'Survival rate (calc)', 'Survival rate diff']])
+        
 
         st.markdown("#### Discount Factor")
         st.markdown("""**Calculation Description:** The discount factor is initialized at 1.0. For each subsequent period, it is calculated as 1 / (1 + previous period's discount rate).
