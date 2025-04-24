@@ -83,7 +83,7 @@ if uploaded_file:
         df['Discounted Cashflow (calc)'] = df['Expected Cashflow (calc)'] * df['Discount factor']
         df['PVFP (calc)'] = df['Discounted Cashflow (calc)'].sum()
 
-        df['Discount factor diff'] = abs(df['Discount rate.1'] - df['Discount factor (calc)'])
+        df['Discount factor diff'] = abs(df['Discount factor'] - df['Discount factor (calc)'])
 
 # --- Check differences ---
         df['Survival rate diff'] = abs(df['Survival rate'] - df['Survival rate (calc)'])
