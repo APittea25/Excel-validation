@@ -7,9 +7,113 @@ st.title("📊 Cashflow Model Validator")
 st.write("Upload your actuarial cashflow Excel file to verify calculations and review formula logic.")
 
 # Upload file
+st.markdown("### 📥 Upload Current and Previous Excel Files")
+col1, col2 = st.columns(2)
+
+with col1:
+    uploaded_file = st.file_uploader("Upload current version", type=[".xlsx"], key="current")
+
+with col2:
+    previous_file = st.file_uploader("Upload previous version", type=[".xlsx"], key="previous")
 uploaded_file = st.file_uploader("Choose an Excel file", type=[".xlsx"])
 
 if uploaded_file:
+    if previous_file:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp_prev:
+            tmp_prev.write(previous_file.read())
+            prev_path = tmp_prev.name
+
+        df_prev = pd.read_excel(prev_path, sheet_name=0)
+
+        st.subheader("🔍 Input Comparison (Current vs Previous)")
+        st.markdown("### 🚨 Anomaly Detection")
+
+        anomalies = []
+        for col in comparison_inputs:
+            if df[col].isnull().any():
+                anomalies.append(f"Missing values detected in {col}.")
+            jumps = df[col].diff().abs()
+            if (jumps > jumps.mean() + 3 * jumps.std()).any():
+                anomalies.append(f"Unusual jump detected in {col} at one or more time steps.")
+
+        if anomalies:
+            st.error("Anomalies Detected:")
+            for issue in anomalies:
+                st.write(f"- {issue}")
+        else:
+            st.success("No anomalies detected in inputs.")
+        comparison_inputs = ['Cashflow', 'Death rate', 'Discount rate']
+        input_comparison = pd.DataFrame({'Time': df['Time']})
+
+        for col in comparison_inputs:
+            input_comparison[f'{col} (Previous)'] = df_prev[col]
+            input_comparison[f'{col} (Current)'] = df[col]
+            input_comparison[f'{col} (% Change)'] = 100 * (df[col] - df_prev[col]) / df_prev[col]
+
+                # Highlight large changes (e.g. > 10%)
+        def highlight_large_changes(val):
+            try:
+                return 'background-color: #ffcccc' if abs(val) > 10 else ''
+            except:
+                return ''
+
+        styled_comparison = input_comparison.style.applymap(highlight_large_changes, subset=[
+            'Cashflow (% Change)', 'Death rate (% Change)', 'Discount rate (% Change)'])
+
+        st.dataframe(styled_comparison)
+
+        st.markdown("### 🧠 AI Summary of Changes")
+        import openai
+        import os
+
+        openai.api_key = os.getenv("OPENAI_API_KEY")
+
+        # Build prompt for GPT model
+        summary_prompt = f"""
+You are an actuarial analyst reviewing assumption updates in a cashflow model. Summarize the changes in inputs below.
+
+Cashflow (% Change):
+{input_comparison['Cashflow (% Change)'].round(2).to_list()}
+
+Death rate (% Change):
+{input_comparison['Death rate (% Change)'].round(2).to_list()}
+
+Discount rate (% Change):
+{input_comparison['Discount rate (% Change)'].round(2).to_list()}
+
+Write a concise summary highlighting any trends, spikes, or anomalies.
+"""
+
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": "You are an actuary skilled at summarizing changes in financial model inputs."},
+                    {"role": "user", "content": summary_prompt}
+                ]
+            )
+            ai_comment = response.choices[0].message['content']
+            st.success("AI-Generated Summary:")
+            st.write(ai_comment)
+        except Exception as e:
+            st.error(f"OpenAI API error: {e}")
+            try:
+                response = openai.ChatCompletion.create(
+                    model="gpt-4",
+                    messages=[
+                        {"role": "system", "content": "You are an actuary skilled at summarizing assumption changes."},
+                        {"role": "user", "content": summary_prompt}
+                    ]
+                )
+                ai_comment = response.choices[0].message['content']
+                st.success("AI-Generated Summary:")
+                st.write(ai_comment)
+            except Exception as e:
+                st.error(f"OpenAI API error: {e}")
+        else:
+            st.warning("OpenAI API key not set. Please set it in your environment to enable AI summary.")
+
+    # Proceed with current file processing
     required_columns = {'Time', 'Cashflow', 'Death rate', 'Discount rate', 'Survival rate', 'Discount factor', 'Expected Cashflow', 'Discounted cashflow', 'PVFP'}
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
         tmp.write(uploaded_file.read())
