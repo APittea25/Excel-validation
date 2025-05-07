@@ -72,8 +72,8 @@ if uploaded_file:
         st.markdown("#### Death Rate Comparison")
         st.dataframe(input_comparison[['Time', 'Death rate (Previous)', 'Death rate (Current)', 'Death rate (% Change)']])
         st.line_chart(input_comparison.set_index('Time')[['Death rate (Previous)', 'Death rate (Current)']])
-        st.markdown("#### Discount Rate Comparison")
-                st.dataframe(input_comparison[['Time', 'Discount rate (Previous)', 'Discount rate (Current)', 'Discount rate (% Change)']])
+                st.markdown("#### Discount Rate Comparison")
+        st.dataframe(input_comparison[['Time', 'Discount rate (Previous)', 'Discount rate (Current)', 'Discount rate (% Change)']])
         st.line_chart(input_comparison.set_index('Time')[['Discount rate (Previous)', 'Discount rate (Current)']])
 
         st.markdown("### 🧠 AI Summary of Changes")
