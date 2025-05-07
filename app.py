@@ -18,6 +18,12 @@ with col2:
 
 
 if uploaded_file:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
+        tmp.write(uploaded_file.read())
+        tmp_path = tmp.name
+
+    df = pd.read_excel(tmp_path, sheet_name=0)
+
     if previous_file:
         with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp_prev:
             tmp_prev.write(previous_file.read())
