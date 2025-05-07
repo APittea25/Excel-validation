@@ -61,8 +61,11 @@ if uploaded_file:
             input_comparison[f'{col} (Current)'] = df[col]
             input_comparison[f'{col} (% Change)'] = 100 * (df[col] - df_prev[col]) / df_prev[col]
 
-        def 
-        return ''
+        def highlight_large_changes(val):
+            try:
+                return 'background-color: #ffcccc' if abs(val) > 10 else ''
+            except:
+                return ''
 
                                                 st.markdown("#### Cashflow Comparison")
         st.dataframe(input_comparison[['Time', 'Cashflow (Previous)', 'Cashflow (Current)', 'Cashflow (% Change)']])
