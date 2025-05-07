@@ -21,6 +21,12 @@ if uploaded_file:
     if previous_file and uploaded_file.name == previous_file.name:
         st.error("The current and previous files appear to be the same. Please upload two different versions.")
         st.stop()
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
+        tmp.write(uploaded_file.read())
+        tmp_path = tmp.name
+
+    df = pd.read_excel(tmp_path, sheet_name=0)
     
 
     if previous_file:
