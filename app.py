@@ -26,7 +26,8 @@ if uploaded_file:
         df_prev = pd.read_excel(prev_path, sheet_name=0)
 
         st.subheader("🔍 Input Comparison (Current vs Previous)")
-        st.markdown("### 🚨 Anomaly Detection")
+        comparison_inputs = ['Cashflow', 'Death rate', 'Discount rate']
+st.markdown("### 🚨 Anomaly Detection")
 
         anomalies = []
         for col in comparison_inputs:
