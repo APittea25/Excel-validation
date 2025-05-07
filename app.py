@@ -53,7 +53,7 @@ if uploaded_file:
             input_comparison[f'{col} (% Change)'] = 100 * (df[col] - df_prev[col]) / df_prev[col]
 
                 
-                st.dataframe(input_comparison)
+                        st.dataframe(input_comparison)
 
         st.markdown("### 🧠 AI Summary of Changes")
         from openai import OpenAI
