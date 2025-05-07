@@ -61,21 +61,18 @@ if uploaded_file:
             input_comparison[f'{col} (Current)'] = df[col]
             input_comparison[f'{col} (% Change)'] = 100 * (df[col] - df_prev[col]) / df_prev[col]
 
-        def highlight_large_changes(val):
-        try:
-            return 'background-color: #ffcccc' if abs(val) > 10 else ''
-        except:
-            return ''
+        def 
+        return ''
 
-                                        st.markdown("#### Cashflow Comparison")
+                                                st.markdown("#### Cashflow Comparison")
         st.dataframe(input_comparison[['Time', 'Cashflow (Previous)', 'Cashflow (Current)', 'Cashflow (% Change)']])
         st.line_chart(input_comparison.set_index('Time')[['Cashflow (Previous)', 'Cashflow (Current)']])
 
-                                                st.markdown("#### Death Rate Comparison")
+                                                        st.markdown("#### Death Rate Comparison")
         st.dataframe(input_comparison[['Time', 'Death rate (Previous)', 'Death rate (Current)', 'Death rate (% Change)']])
         st.line_chart(input_comparison.set_index('Time')[['Death rate (Previous)', 'Death rate (Current)']])
 
-                                                st.markdown("#### Discount Rate Comparison")
+                                                        st.markdown("#### Discount Rate Comparison")
         st.dataframe(input_comparison[['Time', 'Discount rate (Previous)', 'Discount rate (Current)', 'Discount rate (% Change)']])
         st.line_chart(input_comparison.set_index('Time')[['Discount rate (Previous)', 'Discount rate (Current)']])
 
