@@ -44,7 +44,7 @@ if uploaded_file:
 
         df_prev = pd.read_excel(prev_path, sheet_name=0)
 
-                st.subheader("🔍 Input Comparison (Current vs Previous)")
+        st.subheader("🔍 Input Comparison (Current vs Previous)")
         comparison_inputs = ['Cashflow', 'Death rate', 'Discount rate']
 
         input_comparison = pd.DataFrame({'Time': df['Time']})
