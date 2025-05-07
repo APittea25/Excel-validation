@@ -51,7 +51,7 @@ if uploaded_file:
         for col in comparison_inputs:
             input_comparison[f'{col} (Previous)'] = df_prev[col]
             input_comparison[f'{col} (Current)'] = df[col]
-            input_comparison[f'{col} (% Change)'] = 100 * (df[col] - df_prev[col]) / df_prev[col]        st.markdown("#### Cashflow Comparison")
+            input_comparison[f'{col} (% Change)'] = 100 * (
         st.dataframe(input_comparison[['Time', 'Cashflow (Previous)', 'Cashflow (Current)', 'Cashflow (% Change)']])
 
                 st.markdown("#### Death Rate Comparison")
