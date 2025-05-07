@@ -63,7 +63,7 @@ if uploaded_file:
         else:
             st.success("No anomalies detected in inputs.")
 
-                input_comparison = pd.DataFrame({'Time': df['Time']})
+                        input_comparison = pd.DataFrame({'Time': df['Time']})
         for col in comparison_inputs:
             input_comparison[f'{col} (Previous)'] = df_prev[col]
             input_comparison[f'{col} (Current)'] = df[col]
