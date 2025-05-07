@@ -55,17 +55,19 @@ if uploaded_file:
         else:
             st.success("No anomalies detected in inputs.")
 
+        def highlight_large_changes(val):
+    try:
+        return 'background-color: #ffcccc' if abs(val) > 10 else ''
+    except:
+        return ''
+
         input_comparison = pd.DataFrame({'Time': df['Time']})
         for col in comparison_inputs:
             input_comparison[f'{col} (Previous)'] = df_prev[col]
             input_comparison[f'{col} (Current)'] = df[col]
             input_comparison[f'{col} (% Change)'] = 100 * (df[col] - df_prev[col]) / df_prev[col]
 
-        def highlight_large_changes(val):
-    try:
-        return 'background-color: #ffcccc' if abs(val) > 10 else ''
-    except:
-        return ''
+        
 
         st.markdown("#### Cashflow Comparison")
         st.dataframe(input_comparison[['Time', 'Cashflow (Previous)', 'Cashflow (Current)', 'Cashflow (% Change)']])
