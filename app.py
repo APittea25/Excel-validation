@@ -96,10 +96,7 @@ Write a concise summary highlighting any trends, spikes, or anomalies.
     if missing_columns:
         st.error(f"Missing required columns in the uploaded file: {', '.join(missing_columns)}")
         st.stop()
-    st.subheader("Raw Data Preview")
-    st.dataframe(df)
-
-    # Load workbook for formula analysis
+        # Load workbook for formula analysis
     wb = load_workbook(tmp_path, data_only=False)
     ws = wb.active
 
