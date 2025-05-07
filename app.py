@@ -109,11 +109,6 @@ Write a concise summary highlighting any trends, spikes, or anomalies.
 
     # Proceed with current file processing
     required_columns = {'Time', 'Cashflow', 'Death rate', 'Discount rate', 'Survival rate', 'Discount factor', 'Expected Cashflow', 'Discounted cashflow', 'PVFP'}
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
-        tmp.write(uploaded_file.read())
-        tmp_path = tmp.name
-
-        df = pd.read_excel(tmp_path, sheet_name=0)
     missing_columns = required_columns - set(df.columns)
     if missing_columns:
         st.error(f"Missing required columns in the uploaded file: {', '.join(missing_columns)}")
