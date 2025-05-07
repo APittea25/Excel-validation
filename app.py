@@ -66,7 +66,8 @@ if uploaded_file:
         return 'background-color: #ffcccc' if abs(val) > 10 else ''
     except:
         return ''
-                        st.markdown("#### Cashflow Comparison")
+
+        st.markdown("#### Cashflow Comparison")
         st.dataframe(input_comparison[['Time', 'Cashflow (Previous)', 'Cashflow (Current)', 'Cashflow (% Change)']])
 
                                 st.markdown("#### Death Rate Comparison")
