@@ -56,8 +56,7 @@ if uploaded_file:
                 
         # Removed duplicate dataframe display
 
-        st.markdown("### 🧠 AI Summary of Changes")
-                st.dataframe(input_comparison)
+                st.markdown("### 🧠 AI Summary of Changes")
         from openai import OpenAI
         import os
 
