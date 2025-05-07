@@ -73,10 +73,10 @@ if uploaded_file:
         st.dataframe(styled_comparison)
 
         st.markdown("### 🧠 AI Summary of Changes")
-        from openai import OpenAI
+        import openai
         import os
 
-        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        openai.api_key = os.getenv("OPENAI_API_KEY")
 
         summary_prompt = f"""
 You are an actuarial analyst reviewing assumption updates in a cashflow model. Summarize the changes in inputs below.
@@ -94,14 +94,14 @@ Write a concise summary highlighting any trends, spikes, or anomalies.
 """
 
         try:
-            response = client.chat.completions.create(
+            response = openai.ChatCompletion.create(
                 model="gpt-4",
                 messages=[
                     {"role": "system", "content": "You are an actuary skilled at summarizing changes in financial model inputs."},
                     {"role": "user", "content": summary_prompt}
                 ]
             )
-            ai_comment = response.choices[0].message.content
+            ai_comment = response.choices[0]['message']['content']
             st.success("AI-Generated Summary:")
             st.write(ai_comment)
         except Exception as e:
