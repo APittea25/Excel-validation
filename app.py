@@ -68,10 +68,12 @@ if uploaded_file:
                 return ''
         st.markdown("#### Cashflow Comparison")
         st.dataframe(input_comparison[['Time', 'Cashflow (Previous)', 'Cashflow (Current)', 'Cashflow (% Change)']])
-                st.markdown("#### Death Rate Comparison")
-        st.dataframe(input_comparison[['Time', 'Death rate (Previous)', 'Death rate (Current)', 'Death rate (% Change)']])
-                                st.markdown("#### Discount Rate Comparison")
-        st.dataframe(input_comparison[['Time', 'Discount rate (Previous)', 'Discount rate (Current)', 'Discount rate (% Change)']])
+
+        st.markdown("#### Death Rate Comparison")
+                st.dataframe(input_comparison[['Time', 'Death rate (Previous)', 'Death rate (Current)', 'Death rate (% Change)']])
+
+        st.markdown("#### Discount Rate Comparison")
+                st.dataframe(input_comparison[['Time', 'Discount rate (Previous)', 'Discount rate (Current)', 'Discount rate (% Change)']])
         
         st.markdown("### 🧠 AI Summary of Changes")
         from openai import OpenAI
