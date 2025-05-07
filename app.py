@@ -57,8 +57,6 @@ if uploaded_file:
         # Removed duplicate dataframe display
 
         st.markdown("### 🧠 AI Summary of Changes")
-        st.dataframe(input_comparison[['Time', 'Death rate (Previous)', 'Death rate (Current)', 'Death rate (% Change)']])
-
                 st.dataframe(input_comparison)
         from openai import OpenAI
         import os
