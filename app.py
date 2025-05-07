@@ -56,7 +56,7 @@ if uploaded_file:
                 
         # Removed duplicate dataframe display
 
-                st.markdown("### 🧠 AI Summary of Changes")
+                        st.markdown("### 🧠 AI Summary of Changes")
         from openai import OpenAI
         import os
 
