@@ -3,6 +3,13 @@ import pandas as pd
 from openpyxl import load_workbook
 import tempfile
 
+def highlight_large_changes(val):
+    try:
+        return 'background-color: #ffcccc' if abs(val) > 10 else ''
+    except:
+        return ''
+
+
 
 st.title("📊 Cashflow Model Validator")
 st.write("Upload your actuarial cashflow Excel file to verify calculations and review formula logic.")
@@ -56,13 +63,7 @@ if uploaded_file:
         else:
             st.success("No anomalies detected in inputs.")
 
-        def highlight_large_changes(val):
-    try:
-        return 'background-color: #ffcccc' if abs(val) > 10 else ''
-    except:
-        return ''
-
-        input_comparison = pd.DataFrame({'Time': df['Time']})
+                input_comparison = pd.DataFrame({'Time': df['Time']})
         for col in comparison_inputs:
             input_comparison[f'{col} (Previous)'] = df_prev[col]
             input_comparison[f'{col} (Current)'] = df[col]
