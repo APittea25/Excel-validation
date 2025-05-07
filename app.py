@@ -51,12 +51,12 @@ if uploaded_file:
         for col in comparison_inputs:
             input_comparison[f'{col} (Previous)'] = df_prev[col]
             input_comparison[f'{col} (Current)'] = df[col]
-            input_comparison[f'{col} (% Change)'] = 100 * (df[col] - df_prev[col]) / df_prev[col] / df_prev[col]
+                        input_comparison[f'{col} (% Change)'] = 100 * (df[col] - df_prev[col]) / df_prev[col]
 
                 
-        # Removed duplicate dataframe display
+                st.dataframe(input_comparison)
 
-                        st.markdown("### 🧠 AI Summary of Changes")
+        st.markdown("### 🧠 AI Summary of Changes")
         from openai import OpenAI
         import os
 
