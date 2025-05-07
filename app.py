@@ -47,11 +47,11 @@ if uploaded_file:
         st.subheader("🔍 Input Comparison (Current vs Previous)")
         comparison_inputs = ['Cashflow', 'Death rate', 'Discount rate']
 
-        input_comparison = pd.DataFrame({'Time': df['Time']})
+                input_comparison = pd.DataFrame({'Time': df['Time']})
         for col in comparison_inputs:
             input_comparison[f'{col} (Previous)'] = df_prev[col]
             input_comparison[f'{col} (Current)'] = df[col]
-                        input_comparison[f'{col} (% Change)'] = 100 * (df[col] - df_prev[col]) / df_prev[col]
+            input_comparison[f'{col} (% Change)'] = 100 * (df[col] - df_prev[col]) / df_prev[col] / df_prev[col]
 
                 st.markdown("#### Cashflow Comparison")
         st.dataframe(input_comparison[['Time', 'Cashflow (Previous)', 'Cashflow (Current)', 'Cashflow (% Change)']])
