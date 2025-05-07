@@ -44,42 +44,17 @@ if uploaded_file:
 
         df_prev = pd.read_excel(prev_path, sheet_name=0)
 
-        st.subheader("🔍 Input Comparison (Current vs Previous)")
+                st.subheader("🔍 Input Comparison (Current vs Previous)")
         comparison_inputs = ['Cashflow', 'Death rate', 'Discount rate']
 
-        st.markdown("### 🚨 Anomaly Detection")
-        anomalies = []
-        for col in comparison_inputs:
-            if df[col].isnull().any():
-                anomalies.append(f"Missing values detected in {col}.")
-            jumps = df[col].diff().abs()
-            if (jumps > jumps.mean() + 3 * jumps.std()).any():
-                anomalies.append(f"Unusual jump detected in {col} at one or more time steps.")
-
-        if anomalies:
-            st.error("Anomalies Detected:")
-            for issue in anomalies:
-                st.write(f"- {issue}")
-        else:
-            st.success("No anomalies detected in inputs.")
-
-                                input_comparison = pd.DataFrame({'Time': df['Time']})
+        input_comparison = pd.DataFrame({'Time': df['Time']})
         for col in comparison_inputs:
             input_comparison[f'{col} (Previous)'] = df_prev[col]
             input_comparison[f'{col} (Current)'] = df[col]
             input_comparison[f'{col} (% Change)'] = 100 * (df[col] - df_prev[col]) / df_prev[col]
 
-        
+        st.dataframe(input_comparison)
 
-        st.markdown("#### Cashflow Comparison")
-        st.dataframe(input_comparison[['Time', 'Cashflow (Previous)', 'Cashflow (Current)', 'Cashflow (% Change)']])
-
-                                st.markdown("#### Death Rate Comparison")
-        st.dataframe(input_comparison[['Time', 'Death rate (Previous)', 'Death rate (Current)', 'Death rate (% Change)']])
-
-                                st.markdown("#### Discount Rate Comparison")
-        st.dataframe(input_comparison[['Time', 'Discount rate (Previous)', 'Discount rate (Current)', 'Discount rate (% Change)']])
-        
         st.markdown("### 🧠 AI Summary of Changes")
         from openai import OpenAI
         import os
