@@ -3,100 +3,27 @@ import pandas as pd
 from openpyxl import load_workbook
 import tempfile
 
-def highlight_large_changes(val):
-    try:
-        return 'background-color: #ffcccc' if abs(val) > 10 else ''
-    except:
-        return ''
-
-
-
 st.title("📊 Cashflow Model Validator")
 st.write("Upload your actuarial cashflow Excel file to verify calculations and review formula logic.")
 
 # Upload file
-st.markdown("### 📥 Upload Current and Previous Excel Files")
-col1, col2 = st.columns(2)
-
-with col1:
-    uploaded_file = st.file_uploader("Upload current version", type=[".xlsx"], key="current")
-
-with col2:
-    previous_file = st.file_uploader("Upload previous version", type=[".xlsx"], key="previous")
-
+uploaded_file = st.file_uploader("Choose an Excel file", type=[".xlsx"])
 
 if uploaded_file:
-    if previous_file and uploaded_file.name == previous_file.name:
-        st.error("The current and previous files appear to be the same. Please upload two different versions.")
-        st.stop()
-
+    required_columns = {'Time', 'Cashflow', 'Death rate', 'Discount rate', 'Survival rate', 'Discount factor', 'Expected Cashflow', 'Discounted cashflow', 'PVFP'}
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
         tmp.write(uploaded_file.read())
         tmp_path = tmp.name
 
-    df = pd.read_excel(tmp_path, sheet_name=0)
-    
-
-    if previous_file:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp_prev:
-            tmp_prev.write(previous_file.read())
-            prev_path = tmp_prev.name
-
-        df_prev = pd.read_excel(prev_path, sheet_name=0)
-
-        st.subheader("🔍 Input Comparison (Current vs Previous)")
-        comparison_inputs = ['Cashflow', 'Death rate', 'Discount rate']
-        input_comparison = pd.DataFrame({'Time': df['Time']})
-        for col in comparison_inputs:
-            input_comparison[f'{col} (Previous)'] = df_prev[col]
-            input_comparison[f'{col} (Current)'] = df[col]
-            input_comparison[f'{col} (% Change)'] = 100 * (df[col] - df_prev[col]) / df_prev[col]
-
-                
-                        st.dataframe(input_comparison)
-
-        st.markdown("### 🧠 AI Summary of Changes")
-        from openai import OpenAI
-        import os
-
-        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-        summary_prompt = f"""
-You are an actuarial analyst reviewing assumption updates in a cashflow model. Summarize the changes in inputs below.
-
-Cashflow (% Change):
-{input_comparison['Cashflow (% Change)'].round(2).to_list()}
-
-Death rate (% Change):
-{input_comparison['Death rate (% Change)'].round(2).to_list()}
-
-Discount rate (% Change):
-{input_comparison['Discount rate (% Change)'].round(2).to_list()}
-
-Write a concise summary highlighting any trends, spikes, or anomalies.
-"""
-
-        try:
-            response = client.chat.completions.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": "You are an actuary skilled at summarizing changes in financial model inputs."},
-                    {"role": "user", "content": summary_prompt}
-                ]
-            )
-            ai_comment = response.choices[0].message.content
-            st.success("AI-Generated Summary:")
-            st.write(ai_comment)
-        except Exception as e:
-            st.error(f"OpenAI API error: {e}")
-
-    # Proceed with current file processing
-    required_columns = {'Time', 'Cashflow', 'Death rate', 'Discount rate', 'Survival rate', 'Discount factor', 'Expected Cashflow', 'Discounted cashflow', 'PVFP'}
+        df = pd.read_excel(tmp_path, sheet_name=0)
     missing_columns = required_columns - set(df.columns)
     if missing_columns:
         st.error(f"Missing required columns in the uploaded file: {', '.join(missing_columns)}")
         st.stop()
-        # Load workbook for formula analysis
+    st.subheader("Raw Data Preview")
+    st.dataframe(df)
+
+    # Load workbook for formula analysis
     wb = load_workbook(tmp_path, data_only=False)
     ws = wb.active
 
