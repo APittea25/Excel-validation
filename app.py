@@ -15,7 +15,7 @@ with col1:
 
 with col2:
     previous_file = st.file_uploader("Upload previous version", type=[".xlsx"], key="previous")
-uploaded_file = st.file_uploader("Choose an Excel file", type=[".xlsx"])
+
 
 if uploaded_file:
     if previous_file:
